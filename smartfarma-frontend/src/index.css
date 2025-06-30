@@ -1,0 +1,51 @@
+/* smartfarma-frontend/src/index.css */
+
+/* Define tus colores en variables CSS */
+:root {
+  --color-primary: #2C3E50;    /* Azul Oscuro para fondos/encabezados */
+  --color-secondary: #ADD8E6;  /* Azul Claro para acentos */
+  --color-background: #F8F8F8; /* Blanco roto para el fondo general */
+  --color-text-dark: #333333;  /* Gris oscuro para texto principal */
+  --color-text-light: #FFFFFF; /* Blanco para texto sobre fondos oscuros */
+  --color-success: #2ECC71;    /* Verde para mensajes de éxito */
+  --color-danger: #E74C3C;     /* Rojo para errores */
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background); /* Fondo general blanco roto */
+  color: var(--color-text-dark); /* Color de texto general */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Estilos para el App.js que acabas de modificar */
+.App-header {
+  background-color: var(--color-primary); /* Encabezado con azul oscuro */
+  min-height: 100px; /* Un poco más de altura */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: var(--color-text-light); /* Texto blanco sobre el azul */
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra suave */
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+p {
+    margin-top: 0;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
