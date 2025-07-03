@@ -1,38 +1,231 @@
-.App {
-  text-align: center;
+/* smartfarma-frontend/src/App.css */
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif; /* Usando la fuente Inter */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background); /* Color de fondo general */
+  color: var(--color-text-dark); /* Color de texto oscuro por defecto */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Variables CSS para colores - Mantén aquí la paleta que elegiste */
+:root {
+  --color-primary: #2c3e50; /* Azul oscuro actual */
+  --color-secondary: #34495e; /* Azul grisáceo actual */
+  --color-secondary-light: #5a6d7c; /* Azul grisáceo claro */
+  --color-background: #ecf0f1; /* Gris claro */
+  --color-text-dark: #2c3e50; /* Texto oscuro */
+  --color-text-light: #ffffff; /* Texto claro */
+  --color-add: #28a745; /* Verde para añadir */
+  --color-edit: #ffc107; /* Amarillo para editar */
+  --color-delete: #dc3545; /* Rojo para eliminar */
+  --color-cancel: #6c757d; /* Gris para cancelar */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Estilos para el contenedor principal de la aplicación */
+.app-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Apila el header y el main-content */
+  min-height: 100vh; /* Asegura que ocupe al menos toda la altura de la ventana */
+}
+
+/* --- Estilos para el Encabezado Superior Minimalista --- */
+.app-header-minimal {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  padding: 15px 30px;
+  display: flex;
+  justify-content: center; /* Centra el título */
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.App-link {
-  color: #61dafb;
+/* Estilos para el botón que contiene el título SmartFarma */
+.app-title-button {
+  background: none; /* Sin fondo */
+  border: none; /* Sin borde */
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: inherit; /* Hereda el color del texto del padre */
+  font-family: inherit; /* Hereda la fuente del padre */
+  text-align: center;
+  transition: opacity 0.2s ease; /* Transición suave al pasar el mouse */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.app-title-button:hover {
+  opacity: 0.8; /* Ligeramente más transparente al pasar el mouse */
+}
+
+.app-title {
+  margin: 0;
+  font-size: 1.8em;
+  color: var(--color-text-light);
+}
+/* --- Fin Estilos Encabezado Superior Minimalista --- */
+
+
+/* Estilos para el contenido principal */
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+
+  /* --- ESTILOS PARA EL DEGRADADO CSS DIRECTO --- */
+  background: linear-gradient(to right, #4CAF50, #2196F3); /* Degradado de verde a azul */
+  background-size: cover; /* Cubre todo el área sin distorsionar */
+  background-position: center; /* Centra el degradado */
+  background-repeat: no-repeat; /* Evita que se repita */
+  background-attachment: fixed; /* Hace que el fondo sea fijo al hacer scroll */
+  /* --- FIN ESTILOS DEGRADADO CSS --- */
+}
+
+.main-content h2 {
+  color: var(--color-primary);
+  margin-bottom: 25px;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 10px;
+}
+
+/* Estilos para el mensaje de bienvenida */
+.welcome-message {
+  text-align: center;
+  padding: 50px 20px;
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente para el texto */
+  border-radius: 10px;
+  margin-bottom: 30px; /* Espacio debajo del cuadro de bienvenida */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  color: var(--color-text-dark);
+  display: flex; /* Para organizar el contenido y los botones */
+  flex-direction: column; /* Apila el texto y los botones */
+  align-items: center; /* Centra el contenido horizontalmente */
+}
+
+.welcome-message h2 {
+  font-size: 2.5em;
+  color: var(--color-primary);
+  margin-bottom: 10px;
+  border-bottom: none; /* Quitar borde del h2 aquí */
+  padding-bottom: 0;
+}
+
+.welcome-message p {
+  font-size: 1.2em;
+  color: var(--color-secondary);
+  margin-bottom: 20px; /* Espacio entre el párrafo y los botones */
+}
+
+/* --- Estilos para los botones de navegación dentro del contenido principal (welcome-message) --- */
+.main-nav-buttons .nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex; /* Pone los botones en fila */
+  gap: 15px; /* Espacio entre los botones */
+  flex-wrap: wrap; /* Permite que los botones se envuelvan en pantallas pequeñas */
+  justify-content: center; /* Centra los botones si se envuelven */
+}
+
+.main-nav-buttons li {
+  margin: 0; /* Elimina el margen vertical de la lista */
+}
+
+.main-nav-buttons button {
+  padding: 10px 20px;
+  background-color: var(--color-secondary); /* Color de fondo para los botones de navegación */
+  color: var(--color-text-light);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.main-nav-buttons button:hover {
+  background-color: var(--color-secondary-light); /* Un color de fondo al pasar el mouse */
+  transform: translateY(-2px);
+}
+
+.main-nav-buttons button.active {
+  background-color: var(--color-background); /* Fondo claro para el botón activo */
+  color: var(--color-primary); /* Texto oscuro para el botón activo */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+/* --- Fin Estilos Botones de Navegación en Contenido Principal --- */
+
+
+/* Estilos para el mensaje de notificación global */
+.global-message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.global-message.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .app-header-minimal {
+    padding: 10px 20px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .app-title {
+    font-size: 1.5em;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .welcome-message {
+    padding: 30px 15px;
+  }
+
+  .welcome-message h2 {
+    font-size: 2em;
+  }
+
+  .welcome-message p {
+    font-size: 1em;
+  }
+
+  .main-nav-buttons .nav-list {
+    flex-direction: column; /* Apila los botones de navegación */
+    gap: 10px;
+    width: 100%;
+  }
+
+  .main-nav-buttons li {
+    width: 100%;
+  }
+
+  .main-nav-buttons button {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Ajustes para las alertas de inventario en móvil */
+  .alert-container-style {
+    flex-direction: column; /* Apila las alertas verticalmente */
+  }
+
+  .low-stock-alert-style, .expiring-alert-style {
+    min-width: unset; /* Elimina el ancho mínimo para que se ajusten */
+    width: 100%;
   }
 }

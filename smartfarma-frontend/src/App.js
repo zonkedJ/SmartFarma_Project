@@ -1,112 +1,94 @@
 // smartfarma-frontend/src/App.js
 
 import React, { useState } from 'react';
-import './index.css'; // Tus estilos CSS globales
-
-// Importa los componentes de las diferentes vistas
+import './App.css';
 import PacientesView from './components/PacientesView';
 import MedicamentosView from './components/MedicamentosView';
 import VentasView from './components/VentasView';
-import HistorialVentasView from './components/HistorialVentasView'; // NUEVO: Importa el componente de Historial de Ventas
+import HistorialVentasView from './components/HistorialVentasView';
 
 function App() {
-  // Estado para controlar la vista actual: 'pacientes', 'medicamentos', 'ventas' o 'historialVentas'
-  const [currentView, setCurrentView] = useState('pacientes'); // Inicia mostrando la vista de pacientes
-  const [mensajeGlobal, setMensajeGlobal] = useState(''); // Estado para mensajes globales en la aplicación
+  const [activeView, setActiveView] = useState('welcome'); // 'welcome', 'pacientes', 'medicamentos', 'ventas', 'historial_ventas'
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
 
-  // Función para establecer el mensaje global y que desaparezca después de un tiempo
+  // Función para mostrar mensajes globales
   const mostrarMensaje = (msg) => {
-    setMensajeGlobal(msg);
+    setMessage(msg);
+    setShowMessage(true);
     setTimeout(() => {
-      setMensajeGlobal('');
-    }, 5000); // El mensaje desaparecerá después de 5 segundos
+      setShowMessage(false);
+      setMessage('');
+    }, 3000); // El mensaje desaparece después de 3 segundos
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Bienvenido a SmartFarma</h1>
-        <p>Tu software de farmacia moderno.</p>
-        <nav style={{ marginTop: '20px' }}>
-          {/* Botón para la vista de Pacientes */}
-          <button
-            onClick={() => setCurrentView('pacientes')}
-            style={{
-              padding: '10px 20px',
-              marginRight: '10px',
-              // Cambia el estilo si es la vista activa
-              backgroundColor: currentView === 'pacientes' ? 'var(--color-secondary)' : 'var(--color-primary)',
-              color: currentView === 'pacientes' ? 'var(--color-text-dark)' : 'var(--color-text-light)',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Pacientes
-          </button>
-          {/* Botón para la vista de Medicamentos */}
-          <button
-            onClick={() => setCurrentView('medicamentos')}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: currentView === 'medicamentos' ? 'var(--color-secondary)' : 'var(--color-primary)',
-              color: currentView === 'medicamentos' ? 'var(--color-text-dark)' : 'var(--color-text-light)',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Medicamentos
-          </button>
-          {/* Botón para la vista de Ventas */}
-          <button
-            onClick={() => setCurrentView('ventas')}
-            style={{
-              padding: '10px 20px',
-              marginLeft: '10px', // Un poco de espacio entre botones
-              backgroundColor: currentView === 'ventas' ? 'var(--color-secondary)' : 'var(--color-primary)',
-              color: currentView === 'ventas' ? 'var(--color-text-dark)' : 'var(--color-text-light)',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Ventas
-          </button>
-          {/* NUEVO: Botón para la vista de Historial de Ventas */}
-          <button
-            onClick={() => setCurrentView('historialVentas')}
-            style={{
-              padding: '10px 20px',
-              marginLeft: '10px',
-              backgroundColor: currentView === 'historialVentas' ? 'var(--color-secondary)' : 'var(--color-primary)',
-              color: currentView === 'historialVentas' ? 'var(--color-text-dark)' : 'var(--color-text-light)',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Historial de Ventas
-          </button>
-        </nav>
-        {/* Muestra el mensaje global si existe */}
-        {mensajeGlobal && <p style={{ color: 'var(--color-text-light)', marginTop: '10px' }}>{mensajeGlobal}</p>}
+    <div className="app-container">
+      {/* Encabezado superior con el título como botón para volver a Bienvenido */}
+      <header className="app-header-minimal">
+        <button onClick={() => setActiveView('welcome')} className="app-title-button"> {/* Título como botón */}
+          <h1 className="app-title">SmartFarma</h1>
+        </button>
       </header>
 
-      <main style={{ padding: '20px', backgroundColor: 'var(--color-background)' }}>
-        {/* Renderiza el componente de vista actual basado en el estado 'currentView' */}
-        {currentView === 'pacientes' && <PacientesView mostrarMensaje={mostrarMensaje} />}
-        {currentView === 'medicamentos' && <MedicamentosView mostrarMensaje={mostrarMensaje} />}
-        {currentView === 'ventas' && <VentasView mostrarMensaje={mostrarMensaje} />}
-        {currentView === 'historialVentas' && <HistorialVentasView mostrarMensaje={mostrarMensaje} />}
-      </main>
+      {/* Contenido principal */}
+      <div className="main-content">
+        {activeView === 'welcome' && (
+          <div className="welcome-message">
+            <h2>Bienvenido a SmartFarma</h2>
+            <p>Tu software de farmacia moderno.</p>
+            {/* Navegación ahora dentro del welcome-message */}
+            <nav className="main-nav-buttons"> {/* Clase para los botones de navegación */}
+              <ul className="nav-list">
+                {/* El botón de "Bienvenido" no es necesario aquí si el título ya lo hace */}
+                <li>
+                  <button
+                    onClick={() => setActiveView('pacientes')}
+                    className={activeView === 'pacientes' ? 'active' : ''}
+                  >
+                    Pacientes
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveView('medicamentos')}
+                    className={activeView === 'medicamentos' ? 'active' : ''}
+                  >
+                    Medicamentos
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveView('ventas')}
+                    className={activeView === 'ventas' ? 'active' : ''}
+                  >
+                    Ventas
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActiveView('historial_ventas')}
+                    className={activeView === 'historial_ventas' ? 'active' : ''}
+                  >
+                    Historial de Ventas
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
+        {activeView === 'pacientes' && <PacientesView mostrarMensaje={mostrarMensaje} />}
+        {activeView === 'medicamentos' && <MedicamentosView mostrarMensaje={mostrarMensaje} />}
+        {activeView === 'ventas' && <VentasView mostrarMensaje={mostrarMensaje} />}
+        {activeView === 'historial_ventas' && <HistorialVentasView mostrarMensaje={mostrarMensaje} />}
+      </div>
+
+      {/* Mensaje global (notificaciones) */}
+      <div className={`global-message ${showMessage ? 'show' : ''}`}>
+        {message}
+      </div>
     </div>
   );
 }
 
 export default App;
-

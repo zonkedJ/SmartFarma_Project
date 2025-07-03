@@ -171,13 +171,19 @@ function PacientesView({ mostrarMensaje }) {
                     <td style={tableCellStyle}>{paciente.telefono}</td>
                     <td style={tableCellStyle}>{paciente.email}</td>
                     <td style={tableCellStyle}>
-                      <button onClick={() => toggleDetalles(paciente.id)} style={{ ...buttonStyleSmall, marginRight: '5px' }}>
+                      <button
+                        onClick={() => toggleDetalles(paciente.id)}
+                        style={{ ...buttonStyleSmall, backgroundColor: 'var(--color-secondary)', marginRight: '5px', color: 'var(--color-text-light)' }} /* Ajuste de color aquí */
+                      >
                         {pacienteExpandido === paciente.id ? 'Ocultar' : 'Detalles'}
                       </button>
                       <button onClick={() => handleEditClick(paciente)} style={{ ...buttonStyleSmall, backgroundColor: 'var(--color-edit)', marginRight: '5px' }}>
                         Editar
                       </button>
-                      <button onClick={() => handleDeleteClick(paciente.id, paciente.nombre)} style={{ ...buttonStyleSmall, backgroundColor: 'var(--color-delete)' }}>
+                      <button
+                        onClick={() => handleDeleteClick(paciente.id, paciente.nombre)}
+                        style={{ ...buttonStyleSmall, backgroundColor: 'var(--color-delete)', color: 'var(--color-text-light)' }} /* Ajuste de color aquí */
+                      >
                         Eliminar
                       </button>
                     </td>
@@ -246,7 +252,7 @@ const buttonStyle = {
 const buttonStyleSmall = {
   padding: '6px 12px',
   backgroundColor: 'var(--color-secondary)',
-  color: 'var(--color-text-dark)',
+  color: 'var(--color-text-dark)', // Color de texto por defecto para botones pequeños
   border: 'none',
   borderRadius: '4px',
   cursor: 'pointer',
