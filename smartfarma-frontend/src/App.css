@@ -9,7 +9,7 @@ body {
   color: var(--color-text-dark); /* Color de texto oscuro por defecto */
 }
 
-/* Variables CSS para colores - Mantén aquí la paleta que elegiste */
+/* Variables CSS para colores */
 :root {
   --color-primary: #2c3e50; /* Azul oscuro actual */
   --color-secondary: #34495e; /* Azul grisáceo actual */

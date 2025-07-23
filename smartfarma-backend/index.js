@@ -16,9 +16,9 @@ const pool = new Pool({
     port: 5432,
 });
 
-// Middleware
+// Capas intermedias
 app.use(cors()); // Habilita CORS para permitir solicitudes desde el frontend
-app.use(express.json()); // Habilita el uso de JSON en las solicitudes
+app.use(express.json()); //Habilita el uso de JSON en las solicitudes
 
 // --- Rutas para Pacientes ---
 
@@ -142,7 +142,7 @@ app.post('/medicamentos', async (req, res) => {
     }
 });
 
-// NUEVA RUTA: Actualizar un medicamento por ID
+//  Actualizar un medicamento por ID
 app.put('/medicamentos/:id', async (req, res) => {
     const { id } = req.params; // ID del medicamento a actualizar
     const { nombre, principio_activo, laboratorio, presentacion, stock, precio, fecha_vencimiento } = req.body;

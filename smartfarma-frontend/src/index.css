@@ -27,7 +27,7 @@ code {
     monospace;
 }
 
-/* Estilos para el App.js que acabas de modificar */
+/* Estilos para el App.js  */
 .App-header {
   background-color: var(--color-primary); /* Encabezado con azul oscuro */
   min-height: 100px; /* Un poco más de altura */
