@@ -2,23 +2,35 @@
 
 const express = require('express');
 const { Pool } = require('pg');
-const cors = require('cors');
+const cors = require('cors'); // Asegúrate de tener instalado 'cors' (npm install cors)
 
 const app = express();
-const port = 5000;
+const port = 5000; // O el puerto que prefieras para tu backend
 
 // Configuración de la conexión a PostgreSQL
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'smartfarma_db',
-    password: 'smartfarma123', // ¡CAMBIA ESTO por tu contraseña real de PostgreSQL!
+    password: 'smartfarma123', // ¡IMPORTANTE: CAMBIA ESTO por tu contraseña real y segura de PostgreSQL!
     port: 5432,
 });
 
-// Capas intermedias
-app.use(cors()); // Habilita CORS para permitir solicitudes desde el frontend
-app.use(express.json()); //Habilita el uso de JSON en las solicitudes
+// Middleware para verificar la conexión a la base de datos (opcional, para depuración)
+pool.on('connect', () => {
+    console.log('Conectado a la base de datos PostgreSQL.');
+});
+
+pool.on('error', (err) => {
+    console.error('Error inesperado en el pool de PostgreSQL:', err);
+    process.exit(-1); // Terminar el proceso si hay un error grave de conexión
+});
+
+
+// Capas intermedias (Middlewares)
+app.use(cors()); // Habilita CORS para permitir solicitudes desde el frontend (ej. React)
+app.use(express.json()); // Habilita el uso de JSON en las solicitudes (para req.body)
+
 
 // --- Rutas para Pacientes ---
 
@@ -46,10 +58,10 @@ app.post('/pacientes', async (req, res) => {
         console.error('Error al agregar paciente:', err);
         // Manejo de errores específicos, por ejemplo, cédula o email duplicados
         if (err.code === '23505') { // Código de error para violación de unicidad
-            if (err.constraint === 'pacientes_cedula_key') {
+            if (err.constraint === 'pacientes_cedula_key') { // Nombre de la restricción UNIQUE en tu DB
                 return res.status(400).json({ message: 'La cédula ya está registrada.' });
             }
-            if (err.constraint === 'pacientes_email_key') {
+            if (err.constraint === 'pacientes_email_key') { // Nombre de la restricción UNIQUE en tu DB
                 return res.status(400).json({ message: 'El email ya está registrado.' });
             }
         }
@@ -135,14 +147,14 @@ app.post('/medicamentos', async (req, res) => {
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error('Error al agregar medicamento:', err);
-        if (err.code === '23505') { // Código de error para violación de unicidad (nombre del medicamento)
+        if (err.code === '23505') { // Código de error para violación de unicidad (nombre del medicamento si tienes restricción)
             return res.status(400).json({ message: 'Ya existe un medicamento con ese nombre.' });
         }
         res.status(500).json({ message: 'Error interno del servidor al agregar medicamento.' });
     }
 });
 
-//  Actualizar un medicamento por ID
+// Actualizar un medicamento por ID
 app.put('/medicamentos/:id', async (req, res) => {
     const { id } = req.params; // ID del medicamento a actualizar
     const { nombre, principio_activo, laboratorio, presentacion, stock, precio, fecha_vencimiento } = req.body;
@@ -173,7 +185,7 @@ app.put('/medicamentos/:id', async (req, res) => {
     }
 });
 
-// NUEVA RUTA: Eliminar un medicamento por ID
+// Ruta: Eliminar un medicamento por ID
 app.delete('/medicamentos/:id', async (req, res) => {
     const { id } = req.params; // ID del medicamento a eliminar
     try {
@@ -186,6 +198,87 @@ app.delete('/medicamentos/:id', async (req, res) => {
     } catch (err) {
         console.error('Error al eliminar medicamento:', err);
         res.status(500).json({ message: 'Error interno del servidor al eliminar medicamento.' });
+    }
+});
+
+
+// --- Rutas para Proveedores --- (¡ESTA ES LA SECCIÓN AÑADIDA!)
+
+// Ruta para obtener todos los proveedores
+app.get('/proveedores', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM proveedores ORDER BY id ASC');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error al obtener proveedores:', err);
+        res.status(500).json({ message: 'Error interno del servidor al obtener proveedores.' });
+    }
+});
+
+// Ruta para agregar un nuevo proveedor
+app.post('/proveedores', async (req, res) => {
+    const { nombre, contacto, telefono, email } = req.body;
+    try {
+        const result = await pool.query(
+            'INSERT INTO proveedores (nombre, contacto, telefono, email) VALUES ($1, $2, $3, $4) RETURNING *',
+            [nombre, contacto, telefono, email]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error('Error al agregar proveedor:', err);
+        // Puedes añadir manejo de errores específicos como unicidad de email si lo tienes en tu DB
+        if (err.code === '23505') { // Por ejemplo, si tienes una restricción UNIQUE en el email
+            if (err.constraint === 'proveedores_email_key') { // Reemplaza con el nombre real de tu restricción si existe
+                return res.status(400).json({ message: 'El email del proveedor ya está registrado.' });
+            }
+        }
+        res.status(500).json({ message: 'Error interno del servidor al agregar proveedor.' });
+    }
+});
+
+// Ruta para actualizar un proveedor por ID
+app.put('/proveedores/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nombre, contacto, telefono, email } = req.body;
+    try {
+        const result = await pool.query(
+            `UPDATE proveedores SET
+                nombre = $1,
+                contacto = $2,
+                telefono = $3,
+                email = $4
+             WHERE id = $5 RETURNING *`,
+            [nombre, contacto, telefono, email, id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Proveedor no encontrado.' });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Error al actualizar proveedor:', err);
+        if (err.code === '23505') { // Para manejar email duplicado si tienes la restricción
+            if (err.constraint === 'proveedores_email_key') {
+                return res.status(400).json({ message: 'El email ya está registrado para otro proveedor.' });
+            }
+        }
+        res.status(500).json({ message: 'Error interno del servidor al actualizar proveedor.' });
+    }
+});
+
+// Ruta para eliminar un proveedor por ID
+app.delete('/proveedores/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query('DELETE FROM proveedores WHERE id = $1 RETURNING *', [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Proveedor no encontrado.' });
+        }
+        res.json({ message: 'Proveedor eliminado exitosamente.', proveedorEliminado: result.rows[0] });
+    } catch (err) {
+        console.error('Error al eliminar proveedor:', err);
+        res.status(500).json({ message: 'Error interno del servidor al eliminar proveedor.' });
     }
 });
 
@@ -242,7 +335,7 @@ app.get('/ventas_historial', async (req, res) => {
 // Ruta para registrar una nueva venta
 app.post('/ventas', async (req, res) => {
     const { paciente_id, carrito } = req.body; // carrito es un array de { id: medId, cantidad: qty, precio: medPrecio }
-    let client;
+    let client; // Declarar 'client' aquí para que sea accesible en 'finally'
     try {
         client = await pool.connect();
         await client.query('BEGIN'); // Iniciar transacción
@@ -278,11 +371,13 @@ app.post('/ventas', async (req, res) => {
         res.status(201).json({ message: 'Venta registrada exitosamente', venta_id: venta_id });
 
     } catch (err) {
-        await client.query('ROLLBACK'); // Revertir transacción en caso de error
+        if (client) { // Solo rollback si 'client' fue asignado (conexión exitosa)
+            await client.query('ROLLBACK'); // Revertir transacción en caso de error
+        }
         console.error('Error al registrar venta:', err);
         res.status(500).json({ message: 'Error interno del servidor al registrar venta.' });
     } finally {
-        if (client) client.release(); // Liberar el cliente de la pool
+        if (client) client.release(); // Liberar el cliente de la pool siempre
     }
 });
 
